@@ -251,5 +251,6 @@ def main():
 	### NOTES: Error rate is 0.55 for LogisticRegression, 0.57 for NearestNeighbors, and 0.47 for DecisionTreeGiniImpurity
 	
 	averageErrorRate = numpy.mean(errorRates)
-	print 'The average error rate is: ', averageErrorRate
+	print 'The average error rate is:     ', averageErrorRate
+	print 'The average error rate is:     ', averageErrorRate
 	#return myData
