@@ -16,24 +16,24 @@ class Tree(object):
 
 def createTestForLogit():
 	# should be no errors here, perfect regression set up
-	inSample = pandas.DataFrame({'G' : pandas.Series(range(100)) , 'A' : pandas.Series([0]*50+[2]*50), 'NUMFM' : pandas.Series(numpy.random.randint(0, 10, 100)), 'LVD' : pandas.Series([0]*50+[1]*50)})
-	outOfSample = pandas.DataFrame({'G' : pandas.Series(range(25,75)) , 'A' : pandas.Series([0]*25+[2]*25), 'NUMFM' : pandas.Series(numpy.random.randint(0, 10, 50)), 'LVD' : pandas.Series([0]*25+[1]*25)})
+	inSample = pandas.DataFrame({'G' : pandas.Series(range(100)) , 'A' : pandas.Series([0]*50+[2]*50), 'NUMFM' : pandas.Series(numpy.random.randint(0, 10, 100)), 'Survived' : pandas.Series([0]*50+[1]*50)})
+	outOfSample = pandas.DataFrame({'G' : pandas.Series(range(25,75)) , 'A' : pandas.Series([0]*25+[2]*25), 'NUMFM' : pandas.Series(numpy.random.randint(0, 10, 50)), 'Survived' : pandas.Series([0]*25+[1]*25)})
 	return inSample, outOfSample
 
 def createTestForGini():
 	# in this example, A should be split off first, then NUMFM, and we should be 100% correct for these four out of sample observations
 	hundredZeroes = [0]*100
 	fourZeroes = [0]*4
-	inSample = pandas.DataFrame({'G' : pandas.Series(hundredZeroes) , 'A' : pandas.Series([0]*50+[1]*50), 'NUMFM' : pandas.Series([0]*41+[1]*9+[0]*41+[1]*9), 'LVD' : pandas.Series([0]*40+[1]*10+[1]*40+[0]*10)})
-	outOfSample = pandas.DataFrame({'G' : pandas.Series(fourZeroes) , 'A' : pandas.Series([0,0,1,1]), 'NUMFM' : pandas.Series([0,1,0,1]), 'LVD' : pandas.Series([0,1,1,0])})
+	inSample = pandas.DataFrame({'G' : pandas.Series(hundredZeroes) , 'A' : pandas.Series([0]*50+[1]*50), 'NUMFM' : pandas.Series([0]*41+[1]*9+[0]*41+[1]*9), 'Survived' : pandas.Series([0]*40+[1]*10+[1]*40+[0]*10)})
+	outOfSample = pandas.DataFrame({'G' : pandas.Series(fourZeroes) , 'A' : pandas.Series([0,0,1,1]), 'NUMFM' : pandas.Series([0,1,0,1]), 'Survived' : pandas.Series([0,1,1,0])})
 	return inSample, outOfSample
 
 def createTestDataForNearestNeighbors():
 	# nearest neighbors should be 100% correct for these three out of sample observations. k must be three for this to work. 
 	sixZeroes = [0,0,0,0,0,0]
 	threeZeroes = [0,0,0]
-	inSample = pandas.DataFrame({'G' : pandas.Series(sixZeroes) , 'A' : pandas.Series([0,0,1,1,.5,.5]), 'NUMFM' : pandas.Series([0,1,0,1,.5,.5]), 'LVD' : pandas.Series([0,0,1,1,0,1])})
-	outOfSample = pandas.DataFrame({'G' : pandas.Series(threeZeroes) , 'A' : pandas.Series([0.25,0.75,0.25]), 'NUMFM' : pandas.Series([0.25,0.25,0.75]), 'LVD' : pandas.Series([0,1,0])})
+	inSample = pandas.DataFrame({'G' : pandas.Series(sixZeroes) , 'A' : pandas.Series([0,0,1,1,.5,.5]), 'NUMFM' : pandas.Series([0,1,0,1,.5,.5]), 'Survived' : pandas.Series([0,0,1,1,0,1])})
+	outOfSample = pandas.DataFrame({'G' : pandas.Series(threeZeroes) , 'A' : pandas.Series([0.25,0.75,0.25]), 'NUMFM' : pandas.Series([0.25,0.25,0.75]), 'Survived' : pandas.Series([0,1,0])})
 	return inSample, outOfSample
       
 # This function creates random data to analyze and model      
@@ -42,8 +42,8 @@ def createData():
 	gData = numpy.random.randint(0, 2, numSamples)
 	aData = numpy.random.randint(0, 100, numSamples)
 	numfmData = numpy.random.randint(0, 6, numSamples)
-	lvdData = numpy.random.randint(0, 2, numSamples)
-	preFrameData = {'G' : pandas.Series(gData) , 'A' : pandas.Series(aData), 'NUMFM' : pandas.Series(numfmData), 'LVD' : pandas.Series(lvdData)}
+	SurvivedData = numpy.random.randint(0, 2, numSamples)
+	preFrameData = {'G' : pandas.Series(gData) , 'A' : pandas.Series(aData), 'NUMFM' : pandas.Series(numfmData), 'Survived' : pandas.Series(SurvivedData)}
 	framedData = pandas.DataFrame(preFrameData)
 	return framedData
 	
@@ -51,8 +51,8 @@ def createStaticData():
 	gData = [1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0,1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1,0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
 	aData = [66, 83, 46, 21,  4, 66, 36, 49, 78, 59, 47, 56, 28,  6, 42, 69, 76,85, 58,  7, 76, 46, 65, 16, 79, 79,  7, 96, 39, 60, 73, 25, 53, 52,32, 35, 18, 53, 22, 54,  4, 46, 89, 41, 39, 80, 78, 28, 85, 86, 13,67, 20,  3,  4, 86, 95, 25, 87, 28]
 	numfmData = 3, 5, 0, 1, 5, 5, 4, 5, 4, 1, 4, 3, 4, 4, 2, 2, 1, 1, 1, 3, 4, 1, 2,4, 1, 0, 0, 1, 2, 5, 3, 1, 5, 1, 2, 2, 4, 1, 2, 2, 4, 1, 5, 0, 0, 1,5, 3, 2, 1, 5, 0, 3, 1, 5, 2, 5, 0, 5, 5
-	lvdData = [1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1,1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1,1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0]
-	preFrameData = {'G' : pandas.Series(gData) , 'A' : pandas.Series(aData), 'NUMFM' : pandas.Series(numfmData), 'LVD' : pandas.Series(lvdData)}
+	SurvivedData = [1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1,1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1,1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0]
+	preFrameData = {'G' : pandas.Series(gData) , 'A' : pandas.Series(aData), 'NUMFM' : pandas.Series(numfmData), 'Survived' : pandas.Series(SurvivedData)}
 	inSampleData = pandas.DataFrame(preFrameData)
 	gDataOOS = [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1,
        1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0,
@@ -66,12 +66,12 @@ def createStaticData():
        56, 20, 69, 42,  5, 90, 94, 49, 85, 48, 68, 69, 44, 42, 76, 15, 61,
        96, 20, 43, 11, 92,  0, 71, 81, 99,  3, 81, 31, 93, 41, 79]
 	numfmDataOOS = [4, 2, 4, 3, 2, 0, 3, 2, 2, 2, 2, 5, 2, 4, 2, 0, 5, 3, 4, 1, 0, 0, 1,3, 1, 1, 3, 5, 3, 1, 5, 4, 0, 4, 2, 0, 0, 3, 1, 4, 3, 1, 4, 4, 0, 2,1, 2, 1, 1, 2, 4, 5, 3, 2, 4, 1, 5, 1, 4, 4, 4, 2, 0, 1, 3, 1, 1, 5,5, 0, 5, 0, 2, 2, 5, 1, 4, 5, 4, 2, 1, 4, 0, 0, 2, 4, 1, 2, 3, 4, 0,3, 2, 1, 5, 5, 0, 2, 2]
-	lvdDataOOS = [1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
+	SurvivedDataOOS = [1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
        0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
        0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1,
        1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1,
        1, 1, 1, 0, 0, 1, 0, 1]
-	outOfSampleData = pandas.DataFrame({'G' : pandas.Series(gDataOOS) , 'A' : pandas.Series(aDataOOS), 'NUMFM' : pandas.Series(numfmDataOOS), 'LVD' : pandas.Series(lvdDataOOS)})
+	outOfSampleData = pandas.DataFrame({'G' : pandas.Series(gDataOOS) , 'A' : pandas.Series(aDataOOS), 'NUMFM' : pandas.Series(numfmDataOOS), 'Survived' : pandas.Series(SurvivedDataOOS)})
 	return inSampleData, outOfSampleData	
 
 # This function returns an in sample data set and an out of sample data set from an original, whole data set
@@ -93,9 +93,9 @@ def getEuclideanDistance(features, currentOutOfSampleDataPoint, currentInSampleD
 # This function runs a nearest neighbors model and returns an error rate. We loop through all of the out of sample observations,
 # and for each one, calculate the euclidean distance to each in sample observation. We then take the k closest observations and average their
 # target variable to reach out prediction. 
-def runNearestNeighbors(inSampleData, outOfSampleData, k):
+def runNearestNeighbors(inSampleData, outOfSampleData, k, alterOutOfSampleData=False):
 	numIncorrectPredictions = 0.0
-	features = inSampleData.columns.drop('LVD')
+	features = inSampleData.columns.drop('Survived')
 	for outOfSampleIndex in outOfSampleData.index: # loop through out of sample observations
 		euclideanDistancesAndData = []
 		currentOutOfSampleDataPoint = outOfSampleData.ix[outOfSampleIndex]
@@ -104,31 +104,31 @@ def runNearestNeighbors(inSampleData, outOfSampleData, k):
 			euclideanDistance = getEuclideanDistance(features, currentOutOfSampleDataPoint, currentInSampleDataPoint) # calculate the distance between the current in and out of sample observations
 			euclideanDistancesAndData.append({'EuclideanDistance' : euclideanDistance , 'InSampleDataPoint' : currentInSampleDataPoint}) # append the above distance calculation
 		euclideanDistancesAndData = sorted(euclideanDistancesAndData, key=lambda k : k['EuclideanDistance']) # sort the dictionary of in sample observations and their distances to the current out of sample observation
-		targetVars = [ distanceAndDataPoint['InSampleDataPoint']['LVD'] for distanceAndDataPoint in euclideanDistancesAndData[:k]] # find the closest k in sample observations
+		targetVars = [ distanceAndDataPoint['InSampleDataPoint']['Survived'] for distanceAndDataPoint in euclideanDistancesAndData[:k]] # find the closest k in sample observations
 		averageTarget = numpy.mean(targetVars)
 		# If the average target is greater than 0.5, then we predict a value of 1 to be most likely, which corresponds to alive. Otherwise we predict a value of 0. 
 		prediction = 1 if averageTarget > .5 else 0
-		if prediction != currentOutOfSampleDataPoint['LVD']: # check if our prediction is correct and increment numIncorrectPredictions if it is not
+		if prediction != currentOutOfSampleDataPoint['Survived']: # check if our prediction is correct and increment numIncorrectPredictions if it is not
 			numIncorrectPredictions += 1
 	return numIncorrectPredictions / len(outOfSampleData)
 	
-def runNearestNeighborsKernelSmoothing(inSampleData, outOfSampleData):
+def runNearestNeighborsKernelSmoothing(inSampleData, outOfSampleData, alterOutOfSampleData=False):
 	# TO DO - still need to write this function
 	return 1
 		
-def runLogisticRegression(inSampleData, outOfSampleData):
-	features = inSampleData.columns.drop('LVD')
-	logit = sm.Logit(inSampleData['LVD'], inSampleData[features]) 
+def runLogisticRegression(inSampleData, outOfSampleData, alterOutOfSampleData=False):
+	features = inSampleData.columns.drop('Survived')
+	logit = sm.Logit(inSampleData['Survived'], inSampleData[features]) 
 	result = logit.fit()
 	outOfSamplePredictions = result.predict(outOfSampleData[features])
 	transformedOutOfSamplePredictions = [ 1 if prediction > 0.5 else 0 for prediction in outOfSamplePredictions]
 	outOfSampleData = outOfSampleData.reset_index()
-	incorrectPredictionTracker = [ 1 if transformedOutOfSamplePredictions[i] != outOfSampleData['LVD'][i] else 0 for i in range(len(transformedOutOfSamplePredictions))] 
+	incorrectPredictionTracker = [ 1 if transformedOutOfSamplePredictions[i] != outOfSampleData['Survived'][i] else 0 for i in range(len(transformedOutOfSamplePredictions))] 
 	return sum(incorrectPredictionTracker)/float(len(incorrectPredictionTracker))
 
 # This function calculations the gini impurity for the current node
 def getNodeGini(decisionTree):
-	percentAlive = sum(decisionTree.data['LVD']) / float(len(decisionTree.data['LVD']))
+	percentAlive = sum(decisionTree.data['Survived']) / float(len(decisionTree.data['Survived']))
 	percentDead = 1 - percentAlive
 	return 1 - (percentAlive ** 2) - (percentDead ** 2)
 
@@ -138,8 +138,8 @@ def getNextStepGini(lowestGini, decisionTree, feature, giniImprovementRequiremen
 	leftData = decisionTree.data[decisionTree.data[feature] < contraint]
 	rightData = decisionTree.data[decisionTree.data[feature] > contraint]
 	if len(leftData)!= 0 and len(rightData) != 0: # here we check that both branches would have at least one observation
-		leftRatioAlive = sum(leftData['LVD']) / float(len(leftData['LVD'])) # the percent of alive passengers in the left branch
-		rightRatioAlive = sum(rightData['LVD']) / float(len(rightData['LVD'])) # the percent of alive passengers in the right branch
+		leftRatioAlive = sum(leftData['Survived']) / float(len(leftData['Survived'])) # the percent of alive passengers in the left branch
+		rightRatioAlive = sum(rightData['Survived']) / float(len(rightData['Survived'])) # the percent of alive passengers in the right branch
 		ratioOfSamplesToLeft = len(leftData) / float(len(decisionTree.data)) # the percent of observations in the left branch
 		ratioOfSampleToRight = 1 - ratioOfSamplesToLeft
 		leftGini = 1 - (leftRatioAlive ** 2) - ((1-leftRatioAlive) ** 2)
@@ -182,75 +182,102 @@ def buildOutDecisionTree(decisionTree, giniImprovementRequirement):
 
 
 # This functions predicts the target variable for a single observation and decision tree and returns if our prediction was correct or not
-def predictTargetForObservation(decisionTree, outOfSampleObservation):
+def predictTargetForObservation(decisionTree, outOfSampleObservation, alterOutOfSampleData=False):
 	if decisionTree.left == None or decisionTree.right == None: # then we are at a leaf and need to check our prediction now
-		predictedTarget = round(numpy.mean(decisionTree.data['LVD']))
+		predictedTarget = round(numpy.mean(decisionTree.data['Survived']))
 	elif outOfSampleObservation[decisionTree.feature] > decisionTree.constraint: # in this case we need to recurse through the right branch of the current node
-		return predictTargetForObservation(decisionTree.right, outOfSampleObservation)
+		return predictTargetForObservation(decisionTree.right, outOfSampleObservation, alterOutOfSampleData)
 	elif outOfSampleObservation[decisionTree.feature] <= decisionTree.constraint: # in this case we need to recurse through the left branch of the current node
-		return predictTargetForObservation(decisionTree.left, outOfSampleObservation)
+		return predictTargetForObservation(decisionTree.left, outOfSampleObservation, alterOutOfSampleData)
 	else: # We should never get here so I wanted to print an error in case we do
 		print 'We ran into an unexpected edge case!'
 		return 1/0
-	observationIncorrectlyPredicted = 	int(predictedTarget != outOfSampleObservation['LVD'])
-	return observationIncorrectlyPredicted
+	if alterOutOfSampleData:
+		return predictedTarget
+	else:
+		observationIncorrectlyPredicted = 	int(predictedTarget != outOfSampleObservation['Survived'])
+		return observationIncorrectlyPredicted
 
 # This function runs the out of sample data through the decision tree and returns our error rate for predicting the target variable
-def evaluateOutOfSampleDataThroughDecisionTree(decisionTree, outOfSampleData):
+def evaluateOutOfSampleDataThroughDecisionTree(decisionTree, outOfSampleData, alterOutOfSampleData=False):
 	numIncorrectPredictions = 0
 	outOfSampleData = outOfSampleData.reset_index()
 	for rowIndex in range(len(outOfSampleData)):	# here we loop through all observations in the out of sample data
-		observationIncorrectlyPredicted = predictTargetForObservation(decisionTree, outOfSampleData.ix[rowIndex])
-		numIncorrectPredictions += observationIncorrectlyPredicted # increment numIncorrectPredictions everytime we make another incorrect prediction
-	return float(numIncorrectPredictions) / len(outOfSampleData)
+		observationIncorrectlyPredictedOrTarget = predictTargetForObservation(decisionTree, outOfSampleData.ix[rowIndex], alterOutOfSampleData)
+		outOfSampleData['Survived'].ix[rowIndex] = observationIncorrectlyPredictedOrTarget
+		numIncorrectPredictions += observationIncorrectlyPredictedOrTarget # increment numIncorrectPredictions everytime we make another incorrect prediction
+	if alterOutOfSampleData:
+		return outOfSampleData
+	else:
+		return float(numIncorrectPredictions) / len(outOfSampleData)
 		
 # This is the main function to get an error rate for the decision tree learning model. This model uses the gini impurity metric
 # and uses the simple stopping criteria of comparing the gini gain to the parameter giniImprovementRequirement and making sure it is larger. 	
-def runDecisionTreeGiniImpurity(inSampleData, outOfSampleData, giniImprovementRequirement):
+def runDecisionTreeGiniImpurity(inSampleData, outOfSampleData, giniImprovementRequirement, alterOutOfSampleData=False):
 	decisionTree = Tree() # Here we create the root of our decision tree and start filling in some basic data fields
 	decisionTree.data = inSampleData
-	decisionTree.featuresLeftToTry = inSampleData.columns.drop('LVD')
+	decisionTree.featuresLeftToTry = inSampleData.columns.drop('Survived')
 	buildOutDecisionTree(decisionTree, giniImprovementRequirement) # Here we start the recursion process and build out our decision tree based on the in sample data
-	errorRate = evaluateOutOfSampleDataThroughDecisionTree(decisionTree, outOfSampleData) # Here we run our out of sample data through the decision tree and calculate the error rate
-	return errorRate
+	errorRateOrOOSData = evaluateOutOfSampleDataThroughDecisionTree(decisionTree, outOfSampleData, alterOutOfSampleData) # Here we run our out of sample data through the decision tree and calculate the error rate
+	return errorRateOrOOSData
 	
 # This function returns the error rate for a single cross validation run. This function
 # feeds into other functions nearly immediately depending on which model is specified by the user. 
-def getErrorRate(modelType, inSampleData, outOfSampleData):
+def getErrorRate(modelType, inSampleData, outOfSampleData, alterOutOfSampleData=False):
 	if modelType == 'NearestNeighbors':
 		k = 3
-		return runNearestNeighbors(inSampleData, outOfSampleData, k)
+		return runNearestNeighbors(inSampleData, outOfSampleData, k, alterOutOfSampleData)
 	elif modelType == 'NearestNeighborsKernelSmoothing':
-		return runNearestNeighborsKernelSmoothing(inSampleData, outOfSampleData) # TO DO - still need to write this function
+		return runNearestNeighborsKernelSmoothing(inSampleData, outOfSampleData, alterOutOfSampleData) # TO DO - still need to write this function
 	elif modelType == 'LogisticRegression':
-		return runLogisticRegression(inSampleData, outOfSampleData)
+		return runLogisticRegression(inSampleData, outOfSampleData, alterOutOfSampleData)
 	elif modelType == 'DecisionTreeGiniImpurity':
 		giniImprovementRequirement = .1
-		return runDecisionTreeGiniImpurity(inSampleData, outOfSampleData, giniImprovementRequirement)
+		return runDecisionTreeGiniImpurity(inSampleData, outOfSampleData, giniImprovementRequirement, alterOutOfSampleData)
 	else:
 		print 'Did not input a valid model type! \n'
 		return 1/0
+
+def retrieveAndCleanData(fileName):
+	titanicData = pandas.read_csv(fileName)
+	titanicData['Gender'] = titanicData['Sex'].map( {'female': 0, 'male': 1} ).astype(int)
+	titanicData=titanicData.drop('Sex',1)
+	titanicData=titanicData.drop('Embarked',1)
+	medianAge = numpy.median(titanicData['Age'])
+	titanicData['AgeNoNan'] = titanicData['Age']
+	for index in range(len(titanicData['Age'])):
+		titanicData['AgeNoNan'].ix[index] = medianAge if math.isnan(titanicData['Age'].ix[index]) else titanicData['Age'].ix[index]
+	titanicData=titanicData.drop('Age',1)	
+	return titanicData
 
 def main():
 	# This is our main function
 	percentInSample = 0.75 # The percent of data used as in sample data for each run
 	numberOfCrossValidations = 10 # The number of randomized cross validations that we will run
-	modelType = 'LogisticRegression' # Choiced of model type are DecisionTreeGiniImpurity, NearestNeighborsKernelSmoothing, NearestNeighbors, and LogisticRegression
+	modelType = 'DecisionTreeGiniImpurity' # Choices of model type are DecisionTreeGiniImpurity, NearestNeighborsKernelSmoothing, NearestNeighbors, and LogisticRegression
 	errorRates = []
+	runType = 'KaggleOutput' # choices are CrossValidation, and KaggleOutput
+	dataType = 'Actual' # Choices are Actual and Random
 	
-	#myData = createData() # Creates fake data to use before we get real data
-	#for crossValidation in xrange(numberOfCrossValidations):
-	#	inSampleData, outOfSampleData = getInAndOutSample(myData, percentInSample) # Pick our in and out of sample data sets from the overall data set
-	#	errorRate = getErrorRate(modelType, inSampleData, outOfSampleData) 
-	#	errorRates.append(errorRate)
+	if runType == 'KaggleOutput' and modelType == 'DecisionTreeGiniImpurity':
+		## TO DO - make KaggleOutput runType also work for modelTypes of nearest neighbors and logistic regression
+		inSampleData = retrieveAndCleanData('InSampleData.csv')
+		outOfSampleData = retrieveAndCleanData('OutOfSampleData.csv')
+		outOfSampleData['Survived'] = ''
+		outOfSampleData = getErrorRate(modelType, inSampleData, outOfSampleData, alterOutOfSampleData=True) 
+		for feature in ['index','Pclass','SibSp','Parch','Fare','Gender','AgeNoNan']:
+			outOfSampleData=outOfSampleData.drop(feature,1)
+		outOfSampleData.to_csv('KaggleResult.csv')
+		return outOfSampleData
+	elif runType == 'CrossValidation':
+		myData = retrieveAndCleanData('InSampleData.csv') if dataType == 'Actual' else createData() # createData Creates fake data to use before we get real data
+		for crossValidation in xrange(numberOfCrossValidations):
+			inSampleData, outOfSampleData = getInAndOutSample(myData, percentInSample) # Pick our in and out of sample data sets from the overall data set
+			errorRate = getErrorRate(modelType, inSampleData, outOfSampleData) 
+			errorRates.append(errorRate)
+		averageErrorRate = numpy.mean(errorRates)
+		print 'The average error rate is:     ', averageErrorRate
+		
+	### NOTES: Error rate is 0.55 for LogisticRegression, 0.57 for NearestNeighbors, and 0.47 for DecisionTreeGiniImpurity for main static test case
 	
-	inSampleData, outOfSampleData = createStaticData()
-	errorRate = getErrorRate(modelType, inSampleData, outOfSampleData) 
-	errorRates.append(errorRate)
 	
-	### NOTES: Error rate is 0.55 for LogisticRegression, 0.57 for NearestNeighbors, and 0.47 for DecisionTreeGiniImpurity
-	
-	averageErrorRate = numpy.mean(errorRates)
-	print 'The average error rate is:     ', averageErrorRate
-	print 'The average error rate is:     ', averageErrorRate
-	#return myData
